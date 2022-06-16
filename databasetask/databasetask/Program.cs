@@ -83,15 +83,27 @@ namespace Program
                 return commaArray;
             }
         }
+        static void InputBaseData(out string firstName, out string lastName, out int age)
+        {
+            Console.WriteLine();
+            firstName = NoNumbersStringInput("Введите имя:");
+            lastName = NoNumbersStringInput("Введите фамилию:");
+            age = NumberInput(18, 65, "Введите возраст (минимальный 18 максимальный 65):");
+        }
 
+        static void ColorMessage(ConsoleColor color, string message)
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = color;
+            Console.Write(message); 
+            Console.ResetColor();
+        }
+           
         static void PrintList()
         {
             if (people.Count == 0)
             {
-                Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("База данных пуста");
-                Console.ResetColor();
+                ColorMessage(ConsoleColor.Red, "База данных пуста");
 
                 return;
             }
@@ -105,10 +117,7 @@ namespace Program
         {
             if (people.Count == 0)
             {
-                Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("База данных пуста");
-                Console.ResetColor();
+                ColorMessage(ConsoleColor.Red, "База данных пуста");
 
                 return;
             }
@@ -116,31 +125,21 @@ namespace Program
             SearchName();
         }
 
-        static void InputBaseData(out string firstName, out string lastName, out int age)
-        {
-            Console.WriteLine();
-            firstName = NoNumbersStringInput("Введите имя:");
-            lastName = NoNumbersStringInput("Введите фамилию:");
-            age = NumberInput(18, 65, "Введите возраст (минимальный 18 максимальный 65):");
-        }
         static void SearchName()
         {
-
             Console.WriteLine();
             string searchName = NoNumbersStringInput("Введите имя для поиска: ");
             var peopleList = people.Where(x => x.firstName.Contains(searchName));
 
             if (peopleList.Count() > 0)
             {
-                foreach (Person h in peopleList)
+                people.Where(x => x.firstName == searchName).ToList().ForEach(x => 
                 {
                     Console.WriteLine();
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write($"Найдено: ");
-                    Console.ResetColor();
-                    Console.Write(h);
-                    Console.WriteLine();
-                }
+                    ColorMessage(ConsoleColor.Green, "Найдено: ");
+                    Console.WriteLine(x);
+                    Console.WriteLine(); 
+                });
             }
             else
             {
@@ -209,9 +208,9 @@ namespace Program
                 Person p = SelectPersonClass();
                 people.Add(p);
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write("Добавлено: ");
-                Console.ResetColor();
+
+                ColorMessage(ConsoleColor.Green, "Добавлено: ");
+
                 Console.Write($"{p}");
                 Console.WriteLine();
                 Console.WriteLine();
@@ -229,10 +228,7 @@ namespace Program
         {
             if (people.Count == 0)
             {
-                Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("База данных пуста");
-                Console.ResetColor();
+                ColorMessage(ConsoleColor.Red, "База данных пуста");
 
                 return;
             }
@@ -240,9 +236,9 @@ namespace Program
             int index = NumberInput(1, people.Count, "Ввод индекса человека в базу данных:") - 1;
             Person p = people[index];
             people.RemoveAt(index);
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write("Удалено: ");
-            Console.ResetColor();
+
+            ColorMessage(ConsoleColor.Red, "Удалено: ");
+
             Console.Write($"{p}");
             Console.WriteLine();
         }
